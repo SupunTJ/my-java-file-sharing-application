@@ -5,10 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -39,26 +36,37 @@ public class Server {
         jFrame.add(jScrollPane);
         jFrame.setVisible(true);
 
-        ServerSocket serverSocket = new ServerSocket(3000);
+        ServerSocket serverSocket = new ServerSocket(1234);
+
+        System.out.println("Server started. Listening on port 1234...");
 
         while(true){
             try{
                 Socket socket = serverSocket.accept();
+                System.out.println("Client connected: on port 1234");
 
                 DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
 
                 int fileNameLength = dataInputStream.readInt();
 
                 if (fileNameLength > 0){
+
+                    System.out.println("File fileNameLength OK");
+
                     byte[] fileNameBytes = new byte[fileNameLength];
                     dataInputStream.readFully(fileNameBytes,0,fileNameBytes.length);
                     String fileName = new String(fileNameBytes);
 
                     int fileContentLength = dataInputStream.readInt();
 
+
+
                     if(fileContentLength > 0){
                         byte[] fileContentBytes = new byte[fileContentLength];
                         dataInputStream.readFully(fileContentBytes,0,fileContentBytes.length);
+
+                        // Log to console that the file is received successfully
+                        System.out.println("File received successfully: " + fileName);
 
                         JPanel jpFileRow = new JPanel();
                         jpFileRow.setLayout(new BoxLayout(jpFileRow,BoxLayout.Y_AXIS));
@@ -68,22 +76,27 @@ public class Server {
                         jlFileName.setBorder(new EmptyBorder(20,0,10,0));
                         jlFileName.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-                        if(getFileEtension(fileName).equalsIgnoreCase("text")){
+                        if (getFileEtension(fileName).equalsIgnoreCase("txt")){
+                            System.out.println("Checking file is txt");
+
                             jpFileRow.setName(String.valueOf(fileId));
-                            jpFileRow.addMouseListener(getMyMouseListerner());
+                            jpFileRow.addMouseListener(getMyMouseListener());
 
                             jpFileRow.add(jlFileName);
                             jPanel.add(jpFileRow);
                             jFrame.validate();
                         }else{
+                            System.out.println("Checking not txt");
                             jpFileRow.setName(String.valueOf(fileId));
-                            jpFileRow.addMouseListener(getMyMouseListerner());
+                            jpFileRow.addMouseListener(getMyMouseListener());
 
                             jpFileRow.add(jlFileName);
                             jPanel.add(jpFileRow);
 
                             jFrame.validate();
                         }
+
+                        System.out.println("Checking");
 
                         myFiles.add(new MyFile(fileId, fileName, fileContentBytes, getFileEtension(fileName)));
                         fileId++;
@@ -97,7 +110,7 @@ public class Server {
 
     }
 
-    public static MouseListener getMyMouseListerner(){
+    public static MouseListener getMyMouseListener(){
         return new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -154,9 +167,9 @@ public class Server {
 
         JButton jbYes = new JButton("Yes");
         jbYes.setPreferredSize(new Dimension(150, 75));
-        jlPrompt.setFont(new Font("Arial", Font.BOLD, 20));
+        jbYes.setFont(new Font("Arial", Font.BOLD, 20));
 
-        JButton jbNo = new JButton("Yes");
+        JButton jbNo = new JButton("No");
         jbNo.setPreferredSize(new Dimension(150, 75));
         jbNo.setFont(new Font("Arial", Font.BOLD, 20));
 

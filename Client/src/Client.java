@@ -63,7 +63,7 @@ public class Client {
                 }else {
                     try{
                         FileInputStream fileInputStream = new FileInputStream(fileToSend[0].getAbsolutePath());
-                        Socket socket = new Socket("localhost", 3000);
+                        Socket socket = new Socket("localhost", 1234);
 
                         DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
 
@@ -78,6 +78,9 @@ public class Client {
 
                         dataOutputStream.writeInt(fileContentBytes.length);
                         dataOutputStream.write(fileContentBytes);
+
+                        // Log to console that the file is sent successfully
+                        System.out.println("File sent successfully: " + fileToSend[0].getName());
 
                     }catch (IOException error){
                         error.printStackTrace();
