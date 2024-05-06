@@ -1,17 +1,17 @@
 public class MyFile {
-    private String id;
+    private int id;
     private String name;
     private byte[] data;
     private String fileExtension;
 
-    public MyFile(String id, String name, byte[] data, String fileExtension) {
+    public MyFile(int id, String name, byte[] data, String fileExtension) {
         this.id = id;
         this.name = name;
         this.data = data;
         this.fileExtension = fileExtension;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -27,7 +27,7 @@ public class MyFile {
         this.fileExtension = fileExtension;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
